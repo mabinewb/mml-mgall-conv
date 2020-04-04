@@ -1,6 +1,12 @@
 <html>
     <head>
         <title>MML 코드 변환</title>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap');
+            body {
+                font-family: 'Nanum Gothic', sans-serif;
+            }
+        </style>
         <script>
             function conv(){
                 let text = document.querySelector("#mml").value.toString().trim();
@@ -29,7 +35,7 @@
             <br><br>
             <button onclick="conv();" style="font-size: larger; font-weight: bold;">변환</button>
             <button onclick="copy();" style="font-size: larger; font-weight: bold;">복사</button>
-            <h3><a href="https://gall.dcinside.com/mml" target="_blank" style="color: black !important;">MML언어 마이너 갤러리</a></h3>
+            <h3><a href="https://gall.dcinside.com/mml" target="_blank" style="color: black !important;text-decoration: none;">MML언어 마이너 갤러리</a></h3>
         </div>
     </body>
 </html>
