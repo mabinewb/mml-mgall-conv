@@ -1,0 +1,35 @@
+<html>
+    <head>
+        <title>MML 코드 변환</title>
+        <script>
+            function conv(){
+                let text = document.querySelector("#mml").value.toString().trim();
+                
+                if(text.indexOf("MML@") == 0 && text.indexOf(";") == text.length - 1){
+                    if(text.indexOf("ㄱ") == -1 && text.indexOf("ㄷ") == -1 && text.indexOf("ㄹ") == -1){
+                        text = text.replace(/>/g, "ㄱ").replace(/</g, "ㄷ").replace(/&/g, "ㄹ");
+                    } else {
+                        text = text.replace(/ㄱ/g, ">").replace(/ㄷ/g, "<").replace(/ㄹ/g, "&");
+                    }
+                    document.querySelector("#mml").value = text;
+                } else {
+                    alert("올바른 MML 코드가 아닙니다.\nMML@로 시작하여 ;로 끝나는 코드를 입력해주세요.");
+                }
+            }
+            function copy(){
+                let text = document.querySelector("#mml").value.toString().trim();
+                window.prompt("Ctrl+C를 눌러 코드를 복사하세요.", text);
+            }
+        </script>
+    </head>
+    <body>
+        <div style="margin:auto; width: fit-content; text-align: center;">
+            <h1>MML 코드 변환</h1>
+            <textarea id="mml" style="width: 800px; height: 600px;" placeholder="변환할 값을 입력하세요."></textarea>
+            <br><br>
+            <button onclick="conv();" style="font-size: larger; font-weight: bold;">변환</button>
+            <button onclick="copy();" style="font-size: larger; font-weight: bold;">복사</button>
+            <h3><a href="https://gall.dcinside.com/mml" target="_blank" style="color: black !important;">MML언어 마이너 갤러리</a></h3>
+        </div>
+    </body>
+</html>
