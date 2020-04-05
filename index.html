@@ -10,8 +10,9 @@
         <script>
             function conv(){
                 let text = document.querySelector("#mml").value.toString().trim();
+                let skip = document.querySelector("#skip").checked;
                 
-                if(text.indexOf("MML@") == 0 && text.indexOf(";") == text.length - 1){
+                if((text.indexOf("MML@") == 0 && text.indexOf(";") == text.length - 1) || skip){
                     if(text.indexOf("ㄱ") == -1 && text.indexOf("ㄷ") == -1 && text.indexOf("ㄹ") == -1){
                         text = text.replace(/>/g, "ㄱ").replace(/</g, "ㄷ").replace(/&/g, "ㄹ");
                     } else {
@@ -31,7 +32,10 @@
     <body>
         <div style="margin:auto; width: fit-content; text-align: center;">
             <h1>MML 코드 변환</h1>
-            <textarea id="mml" style="width: 800px; height: 600px;" placeholder="변환할 값을 입력하세요."></textarea>
+            <h4>변환할 MML코드를 입력한 후 변환 버튼을 클릭하면 상호변환됩니다.</h4>
+            <textarea id="mml" style="width: 800px; height: 600px;" placeholder="변환할 내용을 입력하세요."></textarea>
+            <br><br>
+            <input type="checkbox" id="skip"><label for="skip" style="font-size: medium; font-weight: bold;">MML코드 형식인지 검사하지 않기</label>
             <br><br>
             <button onclick="conv();" style="font-size: larger; font-weight: bold;">변환</button>
             <button onclick="copy();" style="font-size: larger; font-weight: bold;">복사</button>
