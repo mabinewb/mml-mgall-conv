@@ -37,9 +37,14 @@
             function copy(){
                 //let text = document.querySelector("#mml").value.toString().trim();
                 //window.prompt("Ctrl+C를 눌러 코드를 복사하세요.", text);
-                document.querySelector("#mml").select();
-                document.execCommand("copy");
-                alert("복사 완료");
+                if(document.querySelector("#mml").textLength == 0){
+                    alert("복사할 내용이 없습니다.");
+                } else {
+                    document.querySelector("#mml").select();
+                    document.execCommand("copy");
+                    alert(document.querySelector("#mml").textLength + "글자 복사 완료");
+                    document.activeElement.selectionStart = document.activeElement.selectionEnd;
+                }
             }
         </script>
     </head>
