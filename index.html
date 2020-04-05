@@ -41,6 +41,7 @@
                     alert("복사할 내용이 없습니다.");
                 } else {
                     document.querySelector("#mml").select();
+                    document.querySelector("#mml").focus();
                     document.execCommand("copy");
                     alert(document.querySelector("#mml").textLength + "글자 복사 완료");
                     document.activeElement.selectionStart = document.activeElement.selectionEnd;
