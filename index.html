@@ -14,38 +14,57 @@
         </style>
         <script>
             window.onload = function(){
-                document.querySelector("#copyBtn").disabled = !document.queryCommandSupported('copy');
+                document.getElementById("copyBtn").disabled = !document.queryCommandSupported('copy');
+                chk();
+            }
+            function escapeRegExp(string){
+                return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $&는 일치한 전체 문자열을 의미합니다.
             }
             function conv(){
-                let text = document.querySelector("#mml").value.toString().trim();
-                let skip = document.querySelector("#skip").checked;
-                let ltFig = document.querySelector("#ltFig").value;
-                let gtFig = document.querySelector("#gtFig").value;
-                let ampFig = document.querySelector("#ampFig").value;
+                let text = document.getElementById("mml").value.toString().trim();
+                let skip = document.getElementById("skip").checked;
+                let ltFig = document.getElementById("ltFig").value.toString();
+                let gtFig = document.getElementById("gtFig").value.toString();
+                let ampFig = document.getElementById("ampFig").value.toString();
+                let periodFig = document.getElementById("periodFig").value.toString();
                 
                 if((text.indexOf("MML@") == 0 && text.indexOf(";") == text.length - 1) || skip){
-                    if(text.indexOf(ltFig) == -1 && text.indexOf(gtFig) == -1 && text.indexOf(ampFig) == -1){
-                        text = text.replace(/</g, ltFig).replace(/>/g, "ㄱ").replace(/&/g, "ㄹ");
+                    if(text.indexOf(ltFig) == -1 && text.indexOf(gtFig) == -1 && text.indexOf(ampFig) == -1 && text.indexOf(periodFig) == -1){
+                        text = text.replace(new RegExp(escapeRegExp("<"), "g"), ltFig).replace(new RegExp(escapeRegExp(">"), "g"), gtFig).replace(new RegExp(escapeRegExp("&"), "g"), ampFig).replace(new RegExp(escapeRegExp("."), "g"), periodFig);
                     } else {
-                        text = text.replace(new RegExp(ltFig, "g"), "<").replace(new RegExp(gtFig, "g"), ">").replace(new RegExp(ampFig, "g"), "&");
+                        text = text.replace(new RegExp(escapeRegExp(ltFig), "g"), "<").replace(new RegExp(escapeRegExp(gtFig), "g"), ">").replace(new RegExp(escapeRegExp(ampFig), "g"), "&").replace(new RegExp(escapeRegExp(periodFig), "g"), ".");
                     }
-                    document.querySelector("#mml").value = text;
+                    document.getElementById("mml").value = text;
                 } else {
                     alert("올바른 MML 코드가 아닙니다.\nMML@로 시작하여 ;로 끝나는 코드를 입력해주세요.");
                 }
             }
             function copy(){
-                //let text = document.querySelector("#mml").value.toString().trim();
+                //let text = document.getElementById("mml").value.toString().trim();
                 //window.prompt("Ctrl+C를 눌러 코드를 복사하세요.", text);
-                if(document.querySelector("#mml").textLength == 0){
+                if(document.getElementById("mml").textLength == 0){
                     alert("복사할 내용이 없습니다.");
                 } else {
-                    document.querySelector("#mml").select();
-                    document.querySelector("#mml").focus();
+                    document.getElementById("mml").select();
+                    document.getElementById("mml").focus();
                     document.execCommand("copy");
-                    alert(document.querySelector("#mml").textLength + "글자 복사 완료");
+                    alert(document.getElementById("mml").textLength + "글자 복사 완료");
                     document.activeElement.selectionStart = document.activeElement.selectionEnd;
                 }
+            }
+            function chk(){
+                let ltFig = document.getElementById("ltFig").value;
+                let gtFig = document.getElementById("gtFig").value;
+                let ampFig = document.getElementById("ampFig").value;
+                let periodFig = document.getElementById("periodFig").value;
+                if(ltFig != "<") document.getElementById("ltFig").style.backgroundColor = "lightgreen";
+                else document.getElementById("ltFig").style.backgroundColor = "orange";
+                if(gtFig != ">") document.getElementById("gtFig").style.backgroundColor = "lightgreen";
+                else document.getElementById("gtFig").style.backgroundColor = "orange";
+                if(ampFig != "&") document.getElementById("ampFig").style.backgroundColor = "lightgreen";
+                else document.getElementById("ampFig").style.backgroundColor = "orange";
+                if(periodFig != ".") document.getElementById("periodFig").style.backgroundColor = "lightgreen";
+                else document.getElementById("periodFig").style.backgroundColor = "orange";
             }
         </script>
     </head>
@@ -60,11 +79,13 @@
                 <div style="margin:auto; padding:5px; width:fit-content; border: 1px solid black;">
                     <span style="font-size: large; font-weight: bold;">변환표</span>
                     <br>
-                    <input type="text" class="figure" value="&lt;" maxlength="1" disabled> ↔ <input type="text" class="figure" id="ltFig" value="ㄷ" maxlength="1">
+                    <input type="text" class="figure" value="&lt;" maxlength="1" disabled> ↔ <input type="text" class="figure" id="ltFig" value="ㄷ" maxlength="1" onkeyup="chk();">
                     <br>
-                    <input type="text" class="figure" value="&gt;" maxlength="1" disabled> ↔ <input type="text" class="figure" id="gtFig" value="ㄱ" maxlength="1">
+                    <input type="text" class="figure" value="&gt;" maxlength="1" disabled> ↔ <input type="text" class="figure" id="gtFig" value="ㄱ" maxlength="1" onkeyup="chk();">
                     <br>
-                    <input type="text" class="figure" value="&amp;" maxlength="1" disabled> ↔ <input type="text" class="figure" id="ampFig" value="ㄹ" maxlength="1">
+                    <input type="text" class="figure" value="&amp;" maxlength="1" disabled> ↔ <input type="text" class="figure" id="ampFig" value="ㄹ" maxlength="1" onkeyup="chk();">
+                    <br>
+                    <input type="text" class="figure" value="&period;" maxlength="1" disabled> ↔ <input type="text" class="figure" id="periodFig" value="." maxlength="1" onkeyup="chk();">
                 </div>
             </div>
             <br>
