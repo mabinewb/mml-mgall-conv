@@ -21,27 +21,27 @@
                 return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $&는 일치한 전체 문자열을 의미합니다.
             }
             function conv(){
+                let mmlregex = /(MML@[^;]{1,};)/g;
+
                 let text = document.getElementById("mml").value.toString().trim();
-                let skip = document.getElementById("skip").checked;
                 let ltFig = document.getElementById("ltFig").value.toString();
                 let gtFig = document.getElementById("gtFig").value.toString();
                 let ampFig = document.getElementById("ampFig").value.toString();
                 let periodFig = document.getElementById("periodFig").value.toString();
-                
-                if((text.indexOf("MML@") == 0 && text.indexOf(";") == text.length - 1) || skip){
-                    if(text.indexOf(ltFig) == -1 && text.indexOf(gtFig) == -1 && text.indexOf(ampFig) == -1 && text.indexOf(periodFig) == -1){
-                        text = text.replace(new RegExp(escapeRegExp("<"), "g"), ltFig).replace(new RegExp(escapeRegExp(">"), "g"), gtFig).replace(new RegExp(escapeRegExp("&"), "g"), ampFig).replace(new RegExp(escapeRegExp("."), "g"), periodFig);
+
+                text = text.replace(mmlregex, (match, $1) => {
+                    if((ltFig == "<" || $1.indexOf(ltFig) == -1) && (gtFig == ">" || $1.indexOf(gtFig) == -1) && 
+                    (ampFig == "&" || $1.indexOf(ampFig) == -1) && (periodFig == "." || $1.indexOf(periodFig) == -1)){
+                        $1 = $1.replace(new RegExp(escapeRegExp("<"), "g"), ltFig).replace(new RegExp(escapeRegExp(">"), "g"), gtFig).replace(new RegExp(escapeRegExp("&"), "g"), ampFig).replace(new RegExp(escapeRegExp("."), "g"), periodFig);
                     } else {
-                        text = text.replace(new RegExp(escapeRegExp(ltFig), "g"), "<").replace(new RegExp(escapeRegExp(gtFig), "g"), ">").replace(new RegExp(escapeRegExp(ampFig), "g"), "&").replace(new RegExp(escapeRegExp(periodFig), "g"), ".");
+                        $1 = $1.replace(new RegExp(escapeRegExp(ltFig), "g"), "<").replace(new RegExp(escapeRegExp(gtFig), "g"), ">").replace(new RegExp(escapeRegExp(ampFig), "g"), "&").replace(new RegExp(escapeRegExp(periodFig), "g"), ".");
                     }
-                    document.getElementById("mml").value = text;
-                } else {
-                    alert("올바른 MML 코드가 아닙니다.\nMML@로 시작하여 ;로 끝나는 코드를 입력해주세요.");
-                }
+                    return $1;
+                });
+   
+                document.getElementById("mml").value = text;
             }
             function copy(){
-                //let text = document.getElementById("mml").value.toString().trim();
-                //window.prompt("Ctrl+C를 눌러 코드를 복사하세요.", text);
                 if(document.getElementById("mml").textLength == 0){
                     alert("복사할 내용이 없습니다.");
                 } else {
@@ -57,6 +57,24 @@
                 let gtFig = document.getElementById("gtFig").value;
                 let ampFig = document.getElementById("ampFig").value;
                 let periodFig = document.getElementById("periodFig").value;
+
+                if(ltFig.match(/[ML@;]/g) != null) {
+                    alert("변환표에 M, L, @, ; 문자는 사용할 수 없습니다.");
+                    document.getElementById("ltFig").value = "ㄷ";
+                }
+                if(gtFig.match(/[ML@;]/g) != null) {
+                    alert("변환표에 M, L, @, ; 문자는 사용할 수 없습니다.");
+                    document.getElementById("gtFig").value = "ㄱ";
+                }
+                if(ampFig.match(/[ML@;]/g) != null) {
+                    alert("변환표에 M, L, @, ; 문자는 사용할 수 없습니다.");
+                    document.getElementById("ampFig").value = "ㄹ";
+                }
+                if(periodFig.match(/[ML@;]/g) != null) {
+                    alert("변환표에 M, L, @, ; 문자는 사용할 수 없습니다.");
+                    document.getElementById("periodFig").value = "/";
+                }
+
                 if(ltFig != "<") document.getElementById("ltFig").style.backgroundColor = "lightgreen";
                 else document.getElementById("ltFig").style.backgroundColor = "orange";
                 if(gtFig != ">") document.getElementById("gtFig").style.backgroundColor = "lightgreen";
@@ -74,7 +92,7 @@
             <h4>변환할 MML코드를 입력한 후 변환 버튼을 클릭하면 상호변환됩니다.</h4>
             <textarea id="mml" style="width: 800px; height: 600px;" placeholder="변환할 내용을 입력하세요."></textarea>
             <div id="option" style="margin: 10px;">
-                <input type="checkbox" id="skip"><label for="skip" style="font-size: medium; font-weight: bold;">올바른 MML코드 형식인지 검사하지 않기</label>
+                <span style="font-size: large; font-weight: bold;">MML코드 부분만 자동으로 변환됩니다.</span>
                 <br><br>
                 <div style="margin:auto; padding:5px; width:fit-content; border: 1px solid black;">
                     <span style="font-size: large; font-weight: bold;">변환표</span>
@@ -85,7 +103,7 @@
                     <br>
                     <input type="text" class="figure" value="&amp;" maxlength="1" disabled> ↔ <input type="text" class="figure" id="ampFig" value="ㄹ" maxlength="1" onkeyup="chk();">
                     <br>
-                    <input type="text" class="figure" value="&period;" maxlength="1" disabled> ↔ <input type="text" class="figure" id="periodFig" value="." maxlength="1" onkeyup="chk();">
+                    <input type="text" class="figure" value="&period;" maxlength="1" disabled> ↔ <input type="text" class="figure" id="periodFig" value="/" maxlength="1" onkeyup="chk();">
                 </div>
             </div>
             <br>
